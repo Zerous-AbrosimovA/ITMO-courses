@@ -29,25 +29,38 @@ function dfs(u):
   ans.append(u)
 ```
 # Поиск мостов
+
+Пусть fup[u] - наим глубина такоей вершины, которая доступна из вершины u по пути древесных ребер с не более чем одним обратным ребром в конце\
+Кандидатами в мосты могут быть только древесные ребра\
+fup[u] > d[v] <=> между ними мост 
 ```
-function dfs(v):
-  time = time + 1
-  enter[v] = time
-  ret[v] = time 
-  for всех u смежных с v
-    if (v, u) — обратное ребро
-      ret[v] = min(ret[v], enter[u])
-    if вершина u — белая
-      dfs(u)
-      ret[v] = min(ret[v], ret[u]) 
-      if ret[u] > enter[v] 
-        ребро (v, u) — мост
+globals: g, fup, d, bridges
+===
+Read graph
+d[] := [-1, -1,..., -1]
+fup[] := [-1, -1,..., -1]
+edges := []
+for u in V:
+   if d[u] == -1:
+      dfs(u, u, 0)
+===
+dfs(u, parent, depth):
+   d[u] = fup[u] = depth
+   for v in g[u]:
+      if (v != parent):
+         if d[v] == -1: // (u, v) - tree edge
+            dfs(v, u, depth+1)
+            fup[u] = min(fup[u], fup[v])
+            if d[u] < fup[v]:
+               bridges.push({u, v})
+         else: // (u, v) - backward edge
+            fup[u] = min(fup[u], d[v])
 ```
 # Поиск циклов для ориентированного графа
 ```
 func dfs(v: vertex):             
   color[v] = grey             
-  for (u: vu ∈ E)
+  for (u : g[v])
       if (color[u] == white)
           dfs(u)
       if (color[u] == grey)
