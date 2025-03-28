@@ -90,27 +90,27 @@ dfs(u, parent, depth):
       cuts.append(u)
 ```
 # Проверка компонентов сильной связанности
-Алгоритм Касарагио:\
+Алгоритм Касарагио:
 1) Делаем "псевдо-topsort"
 2) Транспонируем граф
 3) Запускаем серию DFS в выписанном в п.1 порядке на транспонированом графе
 4) Каждое дерево DFS из п.3 - КСС и она получена в порядке topsort конденсации
 ```
 function dfs1(v):                                          
-   color[v] = 1
+   visited[v] = true
    for u : g[v]:
        if not visited[u]
            dfs1(u)
-   Добавляем вершину v в конец списка ord
+   ord.append(v)
 
 function dfs2(v):                                          
    component[v] = col
-   for u : gr[v]
-       if (вершина u еще не находится ни в какой компоненте)                       
+   for u : transposed[v]
+       if (u not in component)                       
            dfs2(u)
 
 function main():
-   считываем исходные данные, формируем массивы g и H
+   считываем исходные данные, формируем массивы g и transposed
    for u in g[v]                           
        if not visited[u]
            dfs1(u)
