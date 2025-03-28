@@ -67,29 +67,56 @@ func dfs(v: vertex):
           print("Cycle!")
   color[v] = black
 ```
+# Алгоритм точек сочленения
+Если ребро мост из этого не следуется, что вершины - точки сочленения\
+Если r - корень дерева DFS, то r - точка сочленения <=> кол-во её детей в дереве DFS >= 2\
+Если же r - не корень, то она точка сочленения <=> существует такой сын v в дереве DFS: fup[v] >= d[u]\
+```
+dfs(u, parent, depth):
+   fup[u] = d[u] = depth
+   cut = false
+   childCount = 0
+   for v in g[u]:
+      if v != parent:
+         if d[v] == -1:
+            childCount++
+            dfs(v, u, depth+1)
+            fup[u] = min(fup[u], fup[v])
+            if u != parent && fup[v] >= d[u]:
+               cut = true
+         else:
+            fup[u] = min(fup[u], d[v])
+   if cut || (u == parent && childCount > 1):
+      cuts.append(u)
+```
 # Проверка компонентов сильной связанности
+Алгоритм Касарагио:\
+1) Делаем "псевдо-topsort"
+2) Транспонируем граф
+3) Запускаем серию DFS в выписанном в п.1 порядке на транспонированом графе
+4) Каждое дерево DFS из п.3 - КСС и она получена в порядке topsort конденсации
 ```
 function dfs1(v):                                          
    color[v] = 1
-   for (v, u) in E
+   for u : g[v]:
        if not visited[u]
-           dfs1(G[v][u])
+           dfs1(u)
    Добавляем вершину v в конец списка ord
 
 function dfs2(v):                                          
    component[v] = col
-   for (v, u) in E
+   for u : gr[v]
        if (вершина u еще не находится ни в какой компоненте)                       
-           dfs2(H[v][u])
+           dfs2(u)
 
 function main():
-   считываем исходные данные, формируем массивы G и H
-   for u in V                           
+   считываем исходные данные, формируем массивы g и H
+   for u in g[v]                           
        if not visited[u]
            dfs1(u)
    col = 1
-   for (по всем вершинам u списка ord[] в обратном порядке)                                                        
-       if (вершина u не находится ни в какой компоненте)
+   for (u : reversed(ord)):                                                        
+       if (u not in component):
            dfs2(u)
            col++
 ```
