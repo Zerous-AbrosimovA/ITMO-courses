@@ -120,3 +120,132 @@ function main():
            dfs2(u)
            col++
 ```
+# Поиск наикратчайшего пути от точки до точки на поле
+``` java
+import java.util.*;
+
+public class Main {
+    private static final int[] DR = {-1, 0, 1, 0};
+    private static final int[] DC = {0, 1, 0, -1};
+    private static final String[] DIR = {"N", "E", "S", "W"};
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+        char[][] f = new char[n][];
+        State start = null;
+        State finish = null;
+        for (int i = 0; i < n; i++) {
+            f[i] = scanner.next().toCharArray();
+            for (int j = 0; j < m; j++) {
+                if (f[i][j] == 'S') {
+                    start = new State(i, j);
+                } else if (f[i][j] == 'F') {
+                    finish = new State(i, j);
+                }
+            }
+        }
+
+        int[][] d = new int[n][m];
+        int[][] p = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(d[i], Integer.MAX_VALUE);
+            Arrays.fill(p[i], -1);
+        }
+        assert start != null;
+        assert finish != null;
+        p[start.row][start.col] = Integer.MAX_VALUE;
+        d[start.row][start.col] = 0;
+
+        Queue<State> q = new ArrayDeque<>();
+        q.add(start);
+        while (!q.isEmpty() && d[finish.row][finish.col] == Integer.MAX_VALUE) {
+            State cur = q.poll();
+            for (int i = 0; i < 4; i++) {
+                int row = cur.row + DR[i];
+                int col = cur.col + DC[i];
+                if (row >= 0 && row < n && col >= 0 && col < m && f[row][col] != '#'
+                        && d[row][col] == Integer.MAX_VALUE) {
+                    d[row][col] = d[cur.row][cur.col] + 1;
+                    p[row][col] = i;
+                    q.add(new State(row, col));
+                }
+            }
+        }
+        if (d[finish.row][finish.col] == Integer.MAX_VALUE) {
+            System.out.println(-1);
+        } else {
+            System.out.println(d[finish.row][finish.col]);
+            ArrayList<String> ans = new ArrayList<>();
+            State cur = finish;
+            while (p[cur.row][cur.col] != Integer.MAX_VALUE) {
+                int i = p[cur.row][cur.col];
+                cur.row -= DR[i];
+                cur.col -= DC[i];
+                ans.add(DIR[i]);
+            }
+            for (String s : ans.reversed()) {
+                System.out.println(s);
+            }
+        }
+    }
+
+    private static final class State {
+        private int row;
+        private int col;
+
+        public State(int row, int col) {
+            this.row = row;
+            this.col = col;
+        }
+    }
+}
+```
+# релаксация графа
+```
+relax(u, v):
+   if d[v] > d[u] + w(u, v):
+      d[v] = d[u] + w(u, v);
+```
+# Алгоритм Форда-Бельмана
+Данный алгоритм работает для взв графов с отриц дугами, но без ц.о.в, достижимых из S
+```
+d = [inf, inf,...];
+d[s] = 0;
+p = [-1, -1,...];
+p[s] = s
+for n-1 раз:
+   for (u, v) in E:
+      if (d[u] != inf && d[v] > d[u] + w(u, v)):
+         d[v] = d[u] + w(u, v)
+         p[v] = u
+```
+# Алгоритм SPFA
+```
+d = [inf, inf,...];
+d[s] = 0;
+p = [-1, -1,...];
+p[s] = s
+q.push(s)
+while !q.empty():
+   u = q.poll()
+   for (u, v) in E:
+      if (d[v] > d[u] + w(u, v)):
+         d[v] = d[u] + w(u, v)
+         p[v] = u
+         q.push(v)
+```
+# Алгоритм Дейкстры
+Алгоритм работает для графов с весвми >= 0
+```
+d = [inf, inf, ...]
+d[s] = 0
+visied = [false, false, ...]
+while true:
+   найдем u = вершина вне облака с мин знач d
+   if не сущ u || d[u] = inf:
+      break
+   visited[u] = true
+   for (u, v) in E:
+      if d[v] > d[u] + w(u, v):
+         d[v] = d[u] + w(u, v)
