@@ -249,3 +249,20 @@ while true:
    for (u, v) in E:
       if d[v] > d[u] + w(u, v):
          d[v] = d[u] + w(u, v)
+```
+# Алгоритм Флойда
+Инвариант: после t-ой итерации массив d такой, что D[u][v] <= d[u][v] <= d[t][u]
+```
+d[n][n]
+for i in V, for j in V: d[i][j] = inf
+for i in V: d[i][i] = 0
+
+for (u, v) in E:
+   d[u][v] = min(d[u][v], w(u, v))
+for t in V:
+   for i in V:
+      for v in V:
+         if (d[u][t] < inf && d[t][v] < inf && d[u][v] > -inf):
+            d[u][v] = min(d[u][v], d[u][t]+d[t][v])
+```
+Если после прохождения алгоритма d[u][u] < 0, то есть ц.о.в, проходящий через u
