@@ -1,7 +1,7 @@
 from math import *
 import matplotlib.pyplot as plt
 import numpy as np
-# @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
+
 def f(x, n): # функция для вычисления многочлена Тейлора n-ой степени
     f = 0
     for k in range(n+1):
