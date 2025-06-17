@@ -45,7 +45,7 @@ plt.subplot(3, 1, 3)
 plt.title("Задание №3")
 plt.xlabel("n", fontsize=14)
 plt.ylabel("x_n", fontsize=14)
-for n in range(n_0, n_0+101): #вывод подпоследовательности, начиная с n_0
+for n in range(n_0, n_0 + 101): #вывод подпоследовательности, начиная с n_0
     if n % 2 == 0: #пропускаем точки кратные 2
         plt.scatter(n_0, math.pi, alpha=0)
     else: #выводим подпоследовательность x_n при n не кратным 2, начиная с n_0
