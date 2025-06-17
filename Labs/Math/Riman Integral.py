@@ -61,9 +61,7 @@ for x1, x2 in zip(ksi_l, ksi_r):
 # вывод результатов подсчетов в табличку для пункта 3
 print(pd.DataFrame({"Variable": ["λ(τ_n)", "σ(f, ξ_left)", "σ(f, ξ_right)", "σ(f, ξ_mid)", "σ(f, ξ_random)", "I^*", "I_*", "trap_int"], "Value":
     [lambda_n, l_s, r_s, m_s, rand_s, sum(darbu_S) * delta_x, sum(darbu_s) * delta_x, sum(int_value)]}))
-# Pre: true
-# Inv: Sorry, you lost
-# Post: dopsa
+
 x = np.linspace(-2, 3, 1000)
 plt.figure(figsize=(20, 20))
 plt.title("График функции f(x) и интегральные суммы")
